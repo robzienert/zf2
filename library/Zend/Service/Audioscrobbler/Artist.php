@@ -28,6 +28,7 @@ namespace Zend\Service\Audioscrobbler;
 use Zend\Validator\Between as BetweenValidator;
 
 /**
+ * @uses       Zend_Validator_Between
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Audioscrobbler
@@ -37,7 +38,7 @@ use Zend\Validator\Between as BetweenValidator;
 class Artist extends Audioscrobbler
 {
     /**
-     * Tag an artist with one or more user supplied tags. This method requires
+     * Tag an artist with one or more user supplied tags. This service requires
      * user authentication.
      *
      * Required params:
@@ -299,7 +300,7 @@ class Artist extends Audioscrobbler
     }
 
     /**
-     * Remove a user's tag from an artist. This method requires user authenticaiton.
+     * Remove a user's tag from an artist. This service requires user authenticaiton.
      *
      * Required params:
      * - artist
@@ -344,7 +345,7 @@ class Artist extends Audioscrobbler
     }
 
     /**
-     * Share an artist with Last.fm users or other friends. This method requires
+     * Share an artist with Last.fm users or other friends. This service requires
      * user authentication.
      *
      * Required params:
@@ -370,7 +371,7 @@ class Artist extends Audioscrobbler
     }
 
     /**
-     * Shout in this artist's shoutbox. This method requires user authentication.
+     * Shout in this artist's shoutbox. This service requires user authentication.
      *
      * Required params:
      * - artist

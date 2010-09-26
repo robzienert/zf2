@@ -25,8 +25,7 @@
  */
 namespace Zend\Service\Audioscrobbler;
 
-use Zend\Service\AbstractService,
-    Zend\Validator\Between as BetweenValidator;
+use Zend\Validator\Between as BetweenValidator;
 
 /**
  * @uses       Zend_Validator_Between
@@ -39,7 +38,7 @@ use Zend\Service\AbstractService,
 class Album extends Audioscrobbler
 {
     /**
-     * Tag an album using a list of user supplied tags. This method requires
+     * Tag an album using a list of user supplied tags. This service requires
      * user authentication.
      *
      * Required params:
@@ -156,7 +155,7 @@ class Album extends Audioscrobbler
     }
 
     /**
-     * Remove a user's tag from an album. This method requires user authentication.
+     * Remove a user's tag from an album. This service requires user authentication.
      *
      * Required params:
      * - artist

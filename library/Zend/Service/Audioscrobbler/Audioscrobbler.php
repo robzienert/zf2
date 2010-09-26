@@ -143,16 +143,16 @@ class Audioscrobbler
      */
     protected function requireParams(array $params, array $requiredParams)
     {
-        $diff = array_diff(array_keys($params), $requiredParams);
-        if ($diff) {
+        $intersect = array_intersect_key(array_keys($params), $requiredParams);
+        if (count($intersect) != count($requiredParams)) {
             throw new InvalidArgumentException(
-                'The following parameters are required: ' . implode(', ', $diff));
+                'The following parameters are required: ' . implode(', ', $requiredParams));
         }
     }
 
     /**
-     * Throws a ComponentException if and only if a provided list
-     * parameter exceeds the maximum provided length.
+     * Throws a ComponentException if and only if a provided list parameter
+     * exceeds the maximum provided length.
      *
      * @param string|array $list The list param, passed by-reference
      * @param string $name The name of the param
