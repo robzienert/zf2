@@ -35,6 +35,13 @@ namespace Zend\Service\Audioscrobbler;
 class Playlist extends Audioscrobbler
 {
     /**
+     * Add a track to a Last.fm user's playlist. This service requires user
+     * authentication.
+     *
+     * Required params:
+     * - playlistID
+     * - track
+     * - artist
      *
      * @param array $params An associative array of the request params
      * @return Zend\Rest\Client\Result
@@ -42,10 +49,18 @@ class Playlist extends Audioscrobbler
      */
     public function addTrack(array $params = array())
     {
+        $this->requireParams($params, array('playlistID', 'track', 'artist'));
 
+        return $this->doSignedCall('playlist.addTrack', $params);
     }
 
     /**
+     * Create a Last.fm playlist on behalf of a user. This service requires user
+     * authentication.
+     *
+     * Optional params:
+     * - title
+     * - description
      *
      * @param array $params An associative array of the request params
      * @return Zend\Rest\Client\Result
@@ -53,10 +68,16 @@ class Playlist extends Audioscrobbler
      */
     public function create(array $params = array())
     {
+        $this->compareParams($params, array('title', 'description'));
 
+        return $this->doSignedCall('playlist.create', $params);
     }
 
     /**
+     * Fetch XSPF playlists using a lastfm playlist url.
+     *
+     * Required params:
+     * - playlistURL
      *
      * @param array $params An associative array of the request params
      * @return Zend\Rest\Client\Result
@@ -64,7 +85,8 @@ class Playlist extends Audioscrobbler
      */
     public function fetch(array $params = array())
     {
+        $this->requireParams($params, array('playlistURL'));
 
+        return $this->doCall('playlist.fetch', $params);
     }
-
 }

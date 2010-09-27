@@ -35,6 +35,15 @@ namespace Zend\Service\Audioscrobbler;
 class Radio extends Audioscrobbler
 {
     /**
+     * Fetch new radio content periodically in an XSPF format. This service
+     * requires user authentication.
+     *
+     * Optional params:
+     * - discovery
+     * - rtp
+     * - bitrate
+     * - buylinks
+     * - speed_multiplier
      *
      * @param array $params An associative array of the request params
      * @return Zend\Rest\Client\Result
@@ -42,10 +51,33 @@ class Radio extends Audioscrobbler
      */
     public function getPlaylist(array $params = array())
     {
+        $this->compareParams($params, array('discovery', 'rtp', 'bitrate',
+                                            'buylinks', 'speed_multiplier'));
 
+        if (isset($params['bitrate'])
+            && ($params['bitrate'] != 64 || $params['bitrate'] != 128)
+        ) {
+            throw new InvalidArgumentException('The value provided for the `bitrate` parameter is not valid');
+        }
+
+        if (isset($params['speed_multiplier'])
+            && ($params['speed_multiplier'] != '1.0' || $params['speed_multiplier'] != '2.0')
+        ) {
+            throw new InvalidArgumentException('The value provided for the `speed_multiplier` parameter is not valid');
+        }
+
+        return $this->doSignedCall('radio.getPlaylist', $params);
     }
 
     /**
+     * Tune in to a Last.fm radio station. This service requires user
+     * authentication.
+     *
+     * Required params:
+     * - station
+     *
+     * Optional params:
+     * - lang
      *
      * @param array $params An associative array of the request params
      * @return Zend\Rest\Client\Result
@@ -53,7 +85,9 @@ class Radio extends Audioscrobbler
      */
     public function tune(array $params = array())
     {
+        $this->compareParams($params, array('station', 'lang'));
+        $this->requireParams($params, array('station'));
 
+        return $this->doSignedCall('radio.tune', $params);
     }
-
 }

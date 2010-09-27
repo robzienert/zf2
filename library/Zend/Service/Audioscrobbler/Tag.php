@@ -35,6 +35,11 @@ namespace Zend\Service\Audioscrobbler;
 class Tag extends Audioscrobbler
 {
     /**
+     * Search for tags similar to this one. Returns tags ranked by similarity,
+     * based on listening data.
+     *
+     * Required params:
+     * - tag
      *
      * @param array $params An associative array of the request params
      * @return Zend\Rest\Client\Result
@@ -42,54 +47,63 @@ class Tag extends Audioscrobbler
      */
     public function getSimilar(array $params = array())
     {
+        $this->requireParams($params, array('tag'));
 
+        return $this->doCall('tag.getSimilar', $params);
     }
 
     /**
+     * Get the top albums tagged by this tag, ordered by tag count.
      *
-     * @param array $params An associative array of the request params
      * @return Zend\Rest\Client\Result
-     * @throws InvalidArgumentException If any params are invalid
      */
-    public function getTopAlbums(array $params = array())
+    public function getTopAlbums()
     {
-
+        return $this->doCall('tag.getTopAlbums');
     }
 
     /**
+     * Get the top artists tagged by this tag, ordered by tag count.
      *
-     * @param array $params An associative array of the request params
      * @return Zend\Rest\Client\Result
-     * @throws InvalidArgumentException If any params are invalid
      */
-    public function getTopArtists(array $params = array())
+    public function getTopArtists()
     {
-
+        return $this->doCall('tag.getTopArtists');
     }
 
     /**
+     * Fetches the top global tags on Last.fm, sorted by popularity (number of
+     * times used).
      *
-     * @param array $params An associative array of the request params
      * @return Zend\Rest\Client\Result
-     * @throws InvalidArgumentException If any params are invalid
      */
-    public function getTopTags(array $params = array())
+    public function getTopTags()
     {
-
+        return $this->doCall('tag.getTopTags');
     }
 
     /**
+     * Get the top tracks tagged by this tag, ordered by tag count.
+     * 
+     * @return Zend\Rest\Client\Result
+     */
+    public function getTopTracks()
+    {
+        return $this->doCall('tag.getTopTracks');
+    }
+
+    /**
+     * Get an artist chart for a tag, for a given date range. If no date range
+     * is supplied, it will return the most recent artist chart for this tag.
      *
-     * @param array $params An associative array of the request params
-     * @return Zend\Rest\Client\Result
-     * @throws InvalidArgumentException If any params are invalid
-     */
-    public function getTopTracks(array $params = array())
-    {
-
-    }
-
-    /**
+     * Required params:
+     * - tag
+     *
+     * Optional params:
+     * - from
+     * - to
+     * - limit
      *
      * @param array $params An associative array of the request params
      * @return Zend\Rest\Client\Result
@@ -97,10 +111,23 @@ class Tag extends Audioscrobbler
      */
     public function getWeeklyArtistChart(array $params = array())
     {
+        $this->requireParams($params, array('tag'));
+        $this->compareParams($params, array('tag', 'from', 'to', 'limit'));
 
+        $between = new BetweenValidator(array('min' => 1, 'max' => 50, 'inclusive' => true));
+        if (isset($params['limit']) && !$between->isValid($params['limit'])) {
+            throw new InvalidArgumentException('The value provided for the `limit` parameter is not valid');
+        }
+
+        return $this->doCall('tag.getWeeklyArtistChart', $params);
     }
 
     /**
+     * Get a list of available charts for this tag, expressed as date ranges
+     * which can be sent to the chart services.
+     *
+     * Required params:
+     * - tag
      *
      * @param array $params An associative array of the request params
      * @return Zend\Rest\Client\Result
@@ -108,10 +135,20 @@ class Tag extends Audioscrobbler
      */
     public function getWeeklyChartList(array $params = array())
     {
+        $this->requireParams($params, array('tag'));
 
+        return $this->doCall('tag.getWeeklyChartList', $params);
     }
 
     /**
+     * Search for a tag by name. Returns matches sorted by relevance.
+     *
+     * Required params:
+     * - tag
+     *
+     * Optional params:
+     * - limit
+     * - page
      *
      * @param array $params An associative array of the request params
      * @return Zend\Rest\Client\Result
@@ -119,7 +156,15 @@ class Tag extends Audioscrobbler
      */
     public function search(array $params = array())
     {
+        $this->requireParams($params, array('tag'));
+        $this->compareParams($params, array('tag', 'limit', 'page'));
 
+        $between = new BetweenValidator(array('min' => 1, 'max' => 30, 'inclusive' => true));
+        if (isset($params['limit']) && !$between->isValid($params['limit'])) {
+            throw new InvalidArgumentException('The value provided for the `limit` parameter is not valid');
+        }
+
+        return $this->doCall('tag.search', $params);
     }
 
 }
